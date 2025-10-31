@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Sneha 💖</title>
+
+  <!-- Fonts & confetti -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Pacifico&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root{
+      --rose-1: #ffd6e8;
+      --rose-2: #ff9ccf;
+      --rose-3: #ff5fa8;
+      --rose-4: #8e0b5a; /* deep wine */
+      --glass-bg: rgba(255,255,255,0.72);
+      --card-shadow: 0 12px 30px rgba(142,11,90,0.15);
+    }
+
+    *{box-sizing:border-box}
+    body {
+      margin: 0;
+      min-height:100vh;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--rose-1) 0%, var(--rose-2) 40%, var(--rose-3) 70%, var(--rose-4) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      overflow-x: hidden;
+      padding: 40px 16px;
+      transition: background 800ms ease;
+    }
+
+    /* floating emoji container sits behind content */
+    .hearts-container{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      font-family: "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", sans-serif;
+    }
+
+    /* emoji float items (hearts + sparkles) */
+    .float-emoji {
+      position: absolute;
+      font-size: 20px;
+      animation: floatUp linear forwards;
+      opacity: 0.98;
+      pointer-events: none;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,0.12));
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+
+    @keyframes floatUp{
+      0%{ transform: translateY(0) scale(0.9); opacity:0; }
+      10%{ opacity:1; }
+      100%{ transform: translateY(-520px) scale(1.05); opacity:0; } /* moved farther up so hearts go higher */
+    }
+
+    .card {
+      position: relative;
+      z-index: 5;
+      background: var(--glass-bg);
+      padding: 22px;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 640px;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(10px) saturate(1.05);
+      border: 1px solid rgba(255,255,255,0.35);
+      margin: 18px 0;
+      transition: transform 400ms ease, opacity 400ms ease;
+    }
+
+    img.main-pic {
+      width: 66%;
+      max-width: 360px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 8px 30px rgba(142,11,90,0.12);
+      transition: transform 350ms ease, width 300ms ease;
+    }
+
+    /* Page 2 & 5 image slightly smaller (exact as requested) */
+    /* We'll also handle via JS to be safe; CSS fallback below */
+    .page-img-small { width: 52% !important; }
+
+    p, .msg {
+      font-size: 17px;
+      line-height: 1.7;
+      color: #7b003b;
+      margin: 0 8px;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .buttons { margin-top: 20px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+
+    button {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 28px;
+      background: linear-gradient(90deg,#ff5fa8,#ff3b9d);
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 200ms ease, box-shadow 200ms ease;
+      box-shadow: 0 8px 18px rgba(142,11,90,0.12);
+    }
+    button:hover { transform: translateY(-4px); box-shadow: 0 16px 30px rgba(142,11,90,0.16); }
+
+    #birthday-title {
+      font-family: 'Pacifico', cursive;
+      font-size: 42px;
+      color: #fff;
+      text-shadow: 0 6px 20px rgba(142,11,90,0.28);
+      margin-bottom: 8px;
+      z-index:6;
+    }
+
+    #music-btn {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 8;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 54px;
+      height: 54px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+      backdrop-filter: blur(6px);
+      transition: transform 180ms ease, background 180ms ease;
+    }
+    #music-btn:hover { transform: scale(1.06); background: rgba(255,255,255,0.18); }
+
+    .fade-slide-in { animation: fadeSlide 420ms ease both; }
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(14px) scale(0.995); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+    .cake-section { margin-top: 20px; }
+    /* Last page: increased spacing between headline and cake as requested */
+    .cake-text { font-size: 20px; color: #7b003b; margin-bottom: 55px; font-weight:600; }
+    .cake { position: relative; width: 250px; height: 200px; margin: auto; cursor: pointer; }
+    .plate { width: 270px; height: 110px; position: absolute; bottom: -10px; left: -10px; background: linear-gradient(180deg,#ddd,#bbb); border-radius: 50%; box-shadow: inset 0 -6px 12px rgba(0,0,0,0.08); }
+    .layer { position: absolute; width: 250px; height: 100px; border-radius: 50%; background: linear-gradient(180deg,#a56a39,#6b3f1a); }
+    .layer-top { top: 0; }
+    .layer-middle { top: 33px; }
+    .layer-bottom { top: 66px; }
+    .icing { position: absolute; top: 2px; left: 5px; width: 240px; height: 90px; border-radius: 50%; background: linear-gradient(180deg,#ffecec,#ffd6e8); }
+    .drip { position: absolute; background: #ffd6e8; border-radius: 25px; box-shadow: 0 4px 10px rgba(142,11,90,0.06); }
+    .drip1 { top:53px; left:5px; width:40px; height:48px; transform: skewY(12deg); }
+    .drip2 { top:69px; left:181px; width:50px; height:60px; transform: skewY(-12deg); }
+    .drip3 { top:54px; left:90px; width:80px; height:60px; }
+    .candle { position: absolute; top:-20px; left:50%; width:16px; height:50px; background:linear-gradient(180deg,#7B020B,#52010a); border-radius:8px; margin-left:-8px; z-index:10; }
+    .flame { position:absolute; top:-34px; left:50%; margin-left:-7.5px; width:15px; height:35px; background: radial-gradient(circle at 30% 30%, #fff1a8, #ffb03a 40%, #ff5a00 70%); border-radius: 50%; animation: flicker 900ms infinite alternate; z-index:10; box-shadow: 0 6px 24px rgba(255,150,50,0.18); }
+    @keyframes flicker { 0%{ transform: translateY(0) scale(1); } 50%{ transform: translateY(-2px) scale(1.02); } 100%{ transform: translateY(0) scale(0.98); } }
+
+    .popup {
+      margin-top: 18px;
+      background: rgba(255,245,250,0.9);
+      padding:14px;
+      border-radius:12px;
+      font-size:16px;
+      box-shadow: 0 8px 30px rgba(142,11,90,0.06);
+      max-width:420px;
+      margin-left:auto;
+      margin-right:auto;
+      color:#7b003b;
+    }
+
+    .hidden { display: none; }
+
+    .dots { margin-top:12px; display:flex; gap:8px; justify-content:center; }
+    .dot { width:10px; height:10px; border-radius:50%; background: rgba(255,255,255,0.5); box-shadow: 0 4px 10px rgba(142,11,90,0.06); transition: transform 180ms ease, background 180ms ease; }
+    .dot.active { background: #fff; transform: scale(1.15); }
+
+    @media (max-width:520px){
+      img.main-pic{ width:90%; }
+      .card{ padding:16px; border-radius:14px; }
+      #birthday-title{ font-size:34px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- emoji container (hearts + sparkles) -->
+  <div class="hearts-container" id="hearts"></div>
+
+  <!-- Background Music -->
+  <audio id="bg-music" loop>
+    <source src="./hbd.mp3" type="audio/mp3">
+  </audio>
+  <button id="music-btn" title="Play / Pause (click)">🎶</button>
+
+  <!-- First Page -->
+  <div class="card" id="first-card">
+    <h1 id="birthday-title">Happy Birthday Sneha 🎉</h1>
+    <p class="msg">💞 Sneha, aaj mai bahut khush ho, kyu ki aaj aap ka special din ha - aap ka birthday🎉<br>
+       Dil sa chahta ho ki aapka har pal muskaan or pyar sa bhara raha, or aaj ka din bus aap ki khushiyo ka naam hoo jaannnnn✨</p>
+    <div class="buttons">
+      <button onclick="nextPage()">Next ➡</button>
+    </div>
+  </div>
+
+  <!-- Main Pages -->
+  <div class="card fade-slide-in" id="main-card" style="display:none;">
+    <img id="page-img" class="main-pic" src="" alt="page image">
+    <div style="min-height:86px;">
+      <p id="message" class="msg"></p>
+    </div>
+
+    <div class="buttons">
+      <button onclick="prevPage()">⬅ Back</button>
+      <button id="next-btn" onclick="nextPage()">Next ➡</button>
+    </div>
+
+    <div class="dots" id="dots"></div>
+  </div>
+
+<script>
+  const music = document.getElementById("bg-music");
+  const musicBtn = document.getElementById("music-btn");
+  const nextBtn = document.getElementById("next-btn");
+  const heartsContainer = document.getElementById("hearts");
+  const dotsContainer = document.getElementById("dots");
+
+  let hasStartedAudio = false;
+  document.addEventListener("click", ()=> {
+    if (!hasStartedAudio) {
+      music.volume = 0.92;
+      music.play().catch(()=>{});
+      hasStartedAudio = true;
+    }
+  }, { once: true });
+
+  musicBtn.addEventListener("click", ()=> {
+    if (music.paused) {
+      music.play().catch(()=>{});
+      musicBtn.textContent = "🎶";
+    } else {
+      music.pause();
+      musicBtn.textContent = "🔇";
+    }
+  });
+
+  const pages = [
+    {img:"IMG-20251028-WA0017.jpg", msg:
+      "💕 Subah ki pahli roshni bhi utni pyari nhi lagti, jitni aap ki ek muskaan lagti haa. Aap mari zindagi ka sukoon haa, jiska sath mai hamasha rahna chaoo,💕"},
+    {img:"IMG-20251028-WA0020.jpg", msg:
+      "💌 Pata nhi kyu, lakin aap ka chahra dekh kar dil ko ajeeb sa sukoon milta haaaa. Lagta ha jasa har thakan, har udassi bus ek pal mai kho jati hoooo. <br> Dil sa mahsoos hota ha ki kitna khushnaseeb hooo, jo aap jasi larki mujhasa pyarrr karti haaa.❤️"},
+    {img:"IMG-20251028-WA0028.jpg", msg:
+      "💖😘"},
+    {img:"IMG-20251028-WA0021.jpg", msg:
+      "✨ Kabhi kabhi lagta ha, mai sapna dekh raha hooo, kyuki aap kasa khoobsurat insaan mari zindagi mai haa. <br> Aap ka bina sab kucch adhoora sa lgta ha, or aap ka sath har chij ek kahani ban jantii haaa.💞"},
+    {img:"IMG-20251028-WA0025.jpg", msg:
+      "🎂 Sneha, mujha pata haa aaj mai aap ka sath nhi hooo, aapka birthday ka is khas pal mai. fir bhi dil sa itna khush hooo, kyu ki aaj aap ka din haaa.💖<br> Shayad waha hota bhi to mil nhi pata par koi baat nhiii -- aap apna parents ka sath yah din khushi sa bitaoo. bus itna yaad rakh na... mai hamesha aap ka sath hooo, har ek din, har ek pal marii jaannnnnnn💝"},
+    {img:"", msg:
+      `<div class="cake-section">
+         <div class="cake-text">🎂 Birthday Cake for My Love 🎂</div>
+         <div class="cake" onclick="blowCandle()">
+           <div class="plate"></div>
+           <div class="layer layer-bottom"></div>
+           <div class="layer layer-middle"></div>
+           <div class="layer layer-top"></div>
+           <div class="icing"></div>
+           <div class="drip drip1"></div>
+           <div class="drip drip2"></div>
+           <div class="drip drip3"></div>
+           <div class="candle">
+             <div class="flame" id="flame"></div>
+           </div>
+         </div>
+         <div id="popup" class="popup hidden">
+           💖 Happyyyyyyy birthdayyyyyyy hamar karajaaaaaa 💖<br>
+           💝Mari babu, mara bachaa, mari jaannnn.... mai bahut khush hoo ki mai aap ka hooo or aap mara.💕 Agar aap samna hoti, to pakka ek tight hug data or ek pyarr sa kisssss bhiiii -- vo bhi gift maiii😚 Bahut pyarrr aata haa aap par, lakin thora udass bhi hooo kyu ki aaj aap mara pass nhiii hooo. par koi baat nhii , bus ek baat yaad rakh naaaa --- mai aap sa bahut, bahut, bahut jada pyarrr kar ta hoooo...... jitna aap kabhi soch bhi nhi sakti mariiii jaaannnnnnn 🥰<br>
+           I Loveeeeeeeeeeeeeeee Youuuuuuuuuuuuuuu hamar karajaaaaaaaaaaaaaaaa😘❤️
+         </div>
+       </div>`
+    }
+  ];
+
+  let current = 0;
+  const firstCard = document.getElementById("first-card");
+  const mainCard = document.getElementById("main-card");
+  const pageImg = document.getElementById("page-img");
+  const message = document.getElementById("message");
+
+  function renderDots(){
+    dotsContainer.innerHTML = "";
+    for(let i=0;i<pages.length;i++){
+      const d = document.createElement("div");
+      d.className = "dot" + (i===current ? " active" : "");
+      d.title = `Page ${i+1}`;
+      d.onclick = ()=> { showSpecific(i); };
+      dotsContainer.appendChild(d);
+    }
+  }
+
+  function showPage(index){
+    mainCard.style.display = "block";
+    firstCard.style.display = "none";
+
+    // Page 2 & 5 smaller: apply class via JS (exact requested pages: index 1 and 4)
+    if(index === 1 || index === 4){
+      pageImg.classList.add("page-img-small");
+    } else {
+      pageImg.classList.remove("page-img-small");
+    }
+
+    if(pages[index].img){
+      pageImg.style.display = "block";
+      pageImg.src = pages[index].img;
+      pageImg.alt = `Sneha - page ${index+1}`;
+    } else {
+      pageImg.style.display = "none";
+    }
+
+    message.innerHTML = pages[index].msg;
+
+    // --- Sparkle/confetti: more powerful + wider spread (happens on page change) ---
+    confetti({
+      particleCount: 250,
+      startVelocity: 38,
+      spread: 140,
+      ticks: 300,
+      gravity: 0.6,
+      origin: { x: Math.random(), y: 0.95 } // origin near bottom so it spreads outward and slightly off-screen
+    });
+
+    // small secondary burst to make sparkles feel larger and more 'outside'
+    confetti({
+      particleCount: 120,
+      startVelocity: 50,
+      spread: 200,
+      ticks: 250,
+      gravity: 0.75,
+      origin: { x: Math.random(), y: 1.1 } // some particles originate slightly below viewport
+    });
+
+    if(index === pages.length -1){ nextBtn.style.display = "none"; } 
+    else { nextBtn.style.display = "inline-block"; }
+
+    mainCard.classList.remove("fade-slide-in");
+    void mainCard.offsetWidth;
+    mainCard.classList.add("fade-slide-in");
+
+    current = index;
+    renderDots();
+  }
+
+  function nextPage(){
+    if(firstCard.style.display !== "none"){
+      showPage(current);
+    } else if(current < pages.length -1){
+      showPage(current + 1);
+    }
+  }
+
+  function prevPage(){
+    if(current > 0){
+      showPage(current - 1);
+    } else {
+      mainCard.style.display = "none";
+      firstCard.style.display = "block";
+    }
+  }
+
+  function showSpecific(i){
+    if(firstCard.style.display !== "none") return;
+    showPage(i);
+  }
+
+  function blowCandle(){
+    const flame = document.getElementById("flame");
+    flame && (flame.style.opacity = 0);
+    document.getElementById("popup").classList.remove("hidden");
+
+    spawnBurstEmojis(18, window.innerWidth/2, window.innerHeight/2);
+
+    confetti({
+      particleCount: 420,
+      spread: 110,
+      startVelocity: 28,
+      scalar: 1.2,
+      origin: { y: 0.55 },
+    });
+
+    const pop = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_3b6f3a0d2a.mp3?filename=bubble-pop-6161.mp3");
+    pop.volume = 0.35;
+    pop.play().catch(()=>{});
+  }
+
+  // --- Emoji float (hearts + sparkles) ---
+  const emojiPool = ['❤️','💖','💗','💕','✨','💫'];
+
+  function spawnEmoji() {
+    const e = document.createElement("div");
+    e.className = "float-emoji";
+
+    // pick random emoji (bias towards hearts)
+    const r = Math.random();
+    let ch;
+    if (r < 0.75) ch = emojiPool[Math.floor(Math.random()*4)]; // hearts even more likely now
+    else ch = emojiPool[4 + Math.floor(Math.random()*2)]; // sparkles sometimes
+    e.textContent = ch;
+
+    // horizontal position (0% - 95% of viewport)
+    const startX = Math.random() * 100;
+    e.style.left = startX + "vw";
+
+    // vertical start near bottom (92% - 98% vh) -> starts slightly lower so they float higher out
+    const startY = 92 + Math.random() * 6;
+    e.style.top = startY + "vh";
+
+    // size random 16px - 36px (slightly larger)
+    const size = 16 + Math.random() * 20;
+    e.style.fontSize = size + "px";
+
+    // duration random 6000ms - 12000ms (longer, so they remain visible)
+    const dur = 6000 + Math.random() * 6000;
+    e.style.animationDuration = dur + "ms";
+
+    // increased horizontal drift range (-140px to +140px)
+    const drift = (Math.random() * 280 - 140);
+    e.style.transform = `translateX(0)`; // initial
+    e.dataset.drift = drift;
+
+    heartsContainer.appendChild(e);
+
+    // animate horizontal drift using requestAnimationFrame
+    const start = performance.now();
+    function tick(now){
+      const elapsed = now - start;
+      const t = Math.min(elapsed / dur, 1);
+      const curX = drift * easeOutCubic(t);
+      e.style.transform = `translateX(${curX}px)`;
+      if(t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    // remove when done
+    setTimeout(()=> { if(e.parentNode) e.parentNode.removeChild(e); }, dur + 500);
+  }
+
+  // small burst for celebrations
+  function spawnBurstEmojis(count = 10, x = window.innerWidth/2, y = window.innerHeight/2) {
+    for(let i=0;i<count;i++){
+      const b = document.createElement("div");
+      b.className = "float-emoji";
+      b.textContent = emojiPool[Math.floor(Math.random()*emojiPool.length)];
+      const size = 18 + Math.random()*26;
+      b.style.fontSize = size + "px";
+      b.style.left = (x + (Math.random()*220 - 110)) + "px";
+      b.style.top = (y + (Math.random()*160 - 80)) + "px";
+      const dur = 900 + Math.random()*1600;
+      b.style.animationDuration = dur + "ms";
+      heartsContainer.appendChild(b);
+      setTimeout(()=> { if(b.parentNode) b.parentNode.removeChild(b); }, dur + 400);
+    }
+  }
+
+  // gentle easing
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  // spawn continuously; increase density when music plays
+  // **More hearts density as requested**:
+  let baseInterval = setInterval(spawnEmoji, 240); // faster spawn (more hearts)
+  setInterval(()=> {
+    if(!music.paused && Math.random() > 0.25) spawnEmoji(); // higher chance when music plays
+  }, 280);
+
+  // initial dots render
+  function renderDots(){
+    dotsContainer.innerHTML = "";
+    for(let i=0;i<pages.length;i++){
+      const d = document.createElement("div");
+      d.className = "dot" + (i===current ? " active" : "");
+      d.title = `Page ${i+1}`;
+      d.onclick = ()=> { showSpecific(i); };
+      dotsContainer.appendChild(d);
+    }
+  }
+  renderDots();
+
+  // keep everything else same (no other modifications)
+</script>
+</body>
+</html>
